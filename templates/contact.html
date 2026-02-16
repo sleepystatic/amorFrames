@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Contact - Amor Frames{% endblock %}
+
+{% block content %}
+<section class="contact-container" style="margin-top: 70px;">
+    <div class="contact-header">
+        <h1>Let's Connect</h1>
+        <p>We'd love to hear about your special day and how we can capture your love story</p>
+    </div>
+
+    <form id="contactForm" class="contact-form">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="name">Name *</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="phone">Phone Number *</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="location">Location (City) *</label>
+                <input type="text" id="location" name="location" placeholder="e.g., San Francisco" required>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="role">Your Role *</label>
+                <select id="role" name="role" required>
+                    <option value="">Select your role</option>
+                    <option value="Bride">Bride</option>
+                    <option value="Groom">Groom</option>
+                    <option value="Wedding Planner">Wedding Planner</option>
+                    <option value="Family Member">Family Member</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="date">Date Needed *</label>
+                <input type="text" id="date" name="date" placeholder="e.g., June 15, 2025 or June 15-16" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="eventType">Event Type *</label>
+            <select id="eventType" name="eventType" required>
+                <option value="">Select event type</option>
+                <option value="Wedding">Wedding</option>
+                <option value="Engagement">Engagement</option>
+                <option value="Pre-Wedding Shoot">Pre-Wedding Shoot</option>
+                <option value="Reception">Reception</option>
+                <option value="Elopement">Elopement</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="weddingInfo">Tell Us About Your Wedding *</label>
+            <textarea id="weddingInfo" name="weddingInfo" placeholder="Share your vision, what you're looking for, any special requirements, venue details, etc." required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="howFound">How Did You Find Us? *</label>
+            <select id="howFound" name="howFound" required>
+                <option value="">Select an option</option>
+                <option value="Google Search">Google Search</option>
+                <option value="Instagram">Instagram</option>
+                <option value="Facebook">Facebook</option>
+                <option value="Referral from Friend/Family">Referral from Friend/Family</option>
+                <option value="Wedding Planner">Wedding Planner</option>
+                <option value="Wedding Website/Blog">Wedding Website/Blog</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="instagram">What's your instagram? Let's be friends *</label>
+            <input type="instagram" id="instagram" name="instagram" required>
+        </div>
+
+        <button type="submit" id="submitBtn" class="submit-btn">Send Message</button>
+        
+        <div id="formMessage" class="form-message"></div>
+    </form>
+
+    <div style="text-align: center; margin-top: 3rem; padding: 2rem; background-color: var(--white); border-radius: 5px;">
+        <h3 style="font-size: 1.3rem; font-weight: 400; margin-bottom: 1rem; letter-spacing: 1px;">Other Ways to Reach Us</h3>
+        <p style="color: var(--light-text); margin-bottom: 0.5rem;">Email: contact@amorframesbyluv.com</p>
+        <p style="color: var(--light-text); margin-bottom: 0.5rem;">Phone: (916)-634-3038</p>
+        <p style="color: var(--light-text);">Based in California, available for travel</p>
+    </div>
+</section>
+{% endblock %}

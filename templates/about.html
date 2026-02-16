@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}About - Amor Frames{% endblock %}
+
+{% block content %}
+<section class="about-container" style="margin-top: 70px;">
+    <div class="about-header">
+        <h1>About Amor Frames</h1>
+    </div>
+
+    <div class="about-content">
+        <div class="about-image">
+            <!-- Placeholder for photographer image -->
+        </div>
+        <div class="about-text">
+            <h2>Meet Lovepreet</h2>
+            <p>
+                At Amor Frames, we believe that every wedding tells a unique love story. My passion is to capture
+                the authentic emotions, candid moments, and timeless beauty of your special day.
+            </p>
+            <p>
+                With a Bachelor's degree in Photography from Vancouver Community College and years of experience documenting
+                weddings across California, I've had the privilege of capturing countless celebrations. My approach
+                is natural, unobtrusive, and focused on preserving the genuine connections between you and your loved ones.
+            </p>
+            <p>
+                Amor Frames accepts a limited number of weddings annually to guarantee personalized attention and the
+                quality experience each couple deserves. I personally handle all photography and post-production work—nothing
+                is outsourced. Your photos are delivered on time with a guaranteed 6-week turnaround, ensuring timely
+                delivery of your cherished memories.
+            </p>
+            <p>
+                I understand that your wedding day is one of the most important days of your life, and I'm honored to
+                be entrusted with capturing these precious memories that you'll cherish forever.
+            </p>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 4rem;">
+        <h2 style="font-size: 2rem; font-weight: 300; letter-spacing: 2px; margin-bottom: 2rem;">My Approach</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; margin-top: 3rem;">
+            <div>
+                <h3 style="font-size: 1.3rem; font-weight: 400; margin-bottom: 1rem; letter-spacing: 1px;">Authentic Moments</h3>
+                <p style="color: var(--light-text); line-height: 1.8;">
+                    I capture genuine emotions and candid moments that reflect the true essence of your celebration.
+                </p>
+            </div>
+            <div>
+                <h3 style="font-size: 1.3rem; font-weight: 400; margin-bottom: 1rem; letter-spacing: 1px;">Timeless Elegance</h3>
+                <p style="color: var(--light-text); line-height: 1.8;">
+                    My style emphasizes classic compositions and natural lighting for photos that will never go out of style.
+                </p>
+            </div>
+            <div>
+                <h3 style="font-size: 1.3rem; font-weight: 400; margin-bottom: 1rem; letter-spacing: 1px;">Personal Connection</h3>
+                <p style="color: var(--light-text); line-height: 1.8;">
+                    I take time to understand your vision and build a relationship that helps you feel comfortable and natural.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 4rem;">
+        <a href="{{ url_for('contact') }}" class="cta-button">Let's Work Together</a>
+    </div>
+</section>
+{% endblock %}

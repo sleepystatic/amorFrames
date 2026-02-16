@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Gallery - Amor Frames{% endblock %}
+
+{% block content %}
+<section class="gallery-container" style="margin-top: 70px;">
+    <div class="gallery-header">
+        <h1>Our Gallery</h1>
+        <p style="color: var(--light-text); font-size: 1.1rem; margin-top: 1rem;">
+            Explore our collection of beautiful wedding stories
+        </p>
+    </div>
+
+    <div class="gallery-grid">
+        {% for set in gallery_sets %}
+        <div class="gallery-item" onclick="window.location.href='{{ url_for('gallery_set', set_id=set.id) }}'">
+            <!-- Placeholder for cover image -->
+            <img src="{{ url_for('static', filename=set.cover_image) }}" alt="{{ set.name }}">
+            <div class="gallery-overlay">
+                <h3>{{ set.name }}</h3>
+                <p>{{ set.location }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
