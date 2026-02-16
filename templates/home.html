@@ -1,0 +1,62 @@
+
+{% extends "base.html" %}
+
+{% block title %}Gallery - Amor Frames{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-bg" style="background-image: url('{{ url_for('static', filename='images/hero-background.jpg') }}');"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <a href="{{ url_for('gallery') }}" class="cta-button">View Our Work</a>
+    </div>
+</section>
+
+<!-- Introduction Section -->
+<section class="gallery-container">
+
+    <img src="{{ url_for('static', filename='images/scattered1.jpg') }}"
+         class="scattered-image medium"
+         style="top: 1000px; right: 20px;"
+         alt="Wedding Photo">
+
+    <img src="{{ url_for('static', filename='images/scattered2.jpg') }}"
+         class="scattered-image large"
+         style="top: 950px; left: 20px;"
+         alt="Wedding Photo">
+    <div style="text-align: center; max-width: 800px; margin: 0 auto;">
+        <h2 style="font-size: 2.5rem; font-weight: 300; letter-spacing: 2px; margin-bottom: 1.5rem;">Welcome to Amor Frames</h2>
+        <p style="color: var(--light-text); font-size: 1.1rem; line-height: 1.8; margin-bottom: 2rem;">
+            We believe every love story deserves to be told beautifully. Our passion is capturing the authentic emotions, 
+            intimate moments, and joyful celebrations that make your wedding day uniquely yours.
+
+            Amor Frames
+        </p>
+        <a href="{{ url_for('contact') }}" class="cta-button">Let's Connect</a>
+    </div>
+</section>
+
+<!-- Featured Work Preview -->
+<section class="gallery-container" style="padding-top: 2rem;">
+    <div class="gallery-header">
+        <h2 style="font-size: 2rem; font-weight: 300; letter-spacing: 2px;">Recent Work</h2>
+        <p style="color: var(--light-text); margin-top: 1rem;">A glimpse into recent celebrations we've had the honor to capture</p>
+    </div>
+    <div class="gallery-grid">
+        {% for set in featured_sets %}
+        <div class="gallery-item" onclick="window.location.href='{{ url_for('gallery_set', set_id=set.id) }}'">
+            <img src="{{ url_for('static', filename=set.cover_image) }}" alt="{{ set.name }}">
+            <div class="gallery-overlay">
+                <h3>{{ set.name }}</h3>
+                <p>{{ set.location }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div style="text-align: center; margin-top: 3rem;">
+        <a href="{{ url_for('gallery') }}" class="cta-button">View Full Gallery</a>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}{{ gallery_set.name }} - Amor Frames{% endblock %}
+
+{% block content %}
+<section class="set-gallery-container" style="margin-top: 70px;">
+    <a href="{{ url_for('gallery') }}" class="back-link">← Back to Gallery</a>
+    
+    <div class="set-header">
+        <h1>{{ gallery_set.name }}</h1>
+        <p>{{ gallery_set.location }}</p>
+    </div>
+
+    <div class="set-gallery-grid">
+        {% for image in gallery_set.images %}
+        <!-- Placeholder for individual images -->
+        <img src="{{ url_for('static', filename=image) }}" alt="{{ gallery_set.name }}">
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
