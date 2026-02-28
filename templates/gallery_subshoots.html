@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}{{ gallery_set.name }} - Amor Frames{% endblock %}
+
+{% block content %}
+<section class="set-gallery-container">
+    <a href="{{ url_for('gallery') }}" class="back-link">← Back to Gallery</a>
+    
+    <div class="set-header">
+        <h1>{{ gallery_set.name }}</h1>
+        <p>{{ gallery_set.location }}</p>
+        <p style="color: var(--light-text); margin-top: 1rem;">Select a shoot to view:</p>
+    </div>
+
+    <div class="gallery-grid">
+        {% for subshoot in gallery_set.subshoots %}
+        <div class="gallery-item" onclick="window.location.href='{{ url_for('gallery_subshoot', set_id=gallery_set.id, subshoot_id=subshoot.id) }}'">
+            <img src="{{ url_for('static', filename=subshoot.cover_image) }}" alt="{{ subshoot.name }}">
+            <div class="gallery-overlay">
+                <h3>{{ subshoot.name }}</h3>
+                <p>{{ subshoot.location }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
