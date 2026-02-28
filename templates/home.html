@@ -9,22 +9,26 @@
 <section class="hero">
     <div class="hero-bg" style="background-image: url('{{ url_for('static', filename='images/hero-background.jpg') }}');"></div>
     <div class="hero-overlay"></div>
-    <div class="hero-content">
-        <a href="{{ url_for('gallery') }}" class="cta-button">View Our Work</a>
-    </div>
+
 </section>
+
+<!--
+<div class="hero-cta-wrapper">
+        <a href="{{ url_for('gallery') }}" class="cta-button">View Our Work</a>
+</div>
+-->
 
 <!-- Introduction Section -->
 <section class="gallery-container">
 
     <img src="{{ url_for('static', filename='images/scattered1.jpg') }}"
          class="scattered-image medium"
-         style="top: 1000px; right: 20px;"
+         style="top: 1050px; right: 20px;"
          alt="Wedding Photo">
 
     <img src="{{ url_for('static', filename='images/scattered2.jpg') }}"
          class="scattered-image large"
-         style="top: 950px; left: 20px;"
+         style="top: 1200px; left: 20px;"
          alt="Wedding Photo">
     <div style="text-align: center; max-width: 800px; margin: 0 auto;">
         <h2 style="font-size: 2.5rem; font-weight: 300; letter-spacing: 2px; margin-bottom: 1.5rem;">Welcome to Amor Frames</h2>

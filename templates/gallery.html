@@ -3,6 +3,14 @@
 {% block title %}Gallery - Amor Frames{% endblock %}
 
 {% block content %}
+<section class="hero hero-gallery">
+    <div class="hero-bg" style="background-image: url('{{ url_for('static', filename='images/hero-background-pf.jpg') }}');"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1 style="margin-top: 1rem;">Our Work</h1>
+    </div>
+</section>
+
 <section class="gallery-container" style="margin-top: 70px;">
     <div class="gallery-header">
         <h1>Our Gallery</h1>

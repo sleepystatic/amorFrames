@@ -11,7 +11,7 @@
         <p>{{ gallery_set.location }}</p>
     </div>
 
-    <div class="set-gallery-grid">
+    <div class="set-gallery-masonry">
         {% for image in gallery_set.images %}
         <!-- Placeholder for individual images -->
         <img src="{{ url_for('static', filename=image) }}" alt="{{ gallery_set.name }}">

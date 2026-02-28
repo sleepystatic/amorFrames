@@ -108,7 +108,7 @@ class Lightbox {
         this.createLightbox();
 
         // Add click listeners to all gallery images
-        const galleryImages = document.querySelectorAll('.set-gallery-grid img');
+        const galleryImages = document.querySelectorAll('.set-gallery-grid img, .set-gallery-masonry img');
 
         if (galleryImages.length > 0) {
             // Store all image sources
@@ -202,7 +202,7 @@ class Lightbox {
 }
 
 // Initialize lightbox when DOM is loaded
-if (document.querySelector('.set-gallery-grid')) {
+if (document.querySelector('.set-gallery-grid') || document.querySelector('.set-gallery-masonry')) {
     new Lightbox();
 }
 

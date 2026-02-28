@@ -1,43 +1,93 @@
 from flask import Flask, render_template, request, jsonify
 from flask_mail import Mail, Message
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 
-# Email configuration (you'll add your credentials later)
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
+app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.mailgun.org')
+app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 587))
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = os.environ.get('EMAIL_USER')  # Set this in your environment
-app.config['MAIL_PASSWORD'] = os.environ.get('EMAIL_PASS')  # Set this in your environment
-app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('EMAIL_USER')
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER')
 
 mail = Mail(app)
 
-# Gallery sets data (will move to database later for CMS)
+
 GALLERY_SETS = [
     {
         'id': 1,
-        'name': 'Max & Hailie',
-        'location': 'Napa Valley, CA',
-        'cover_image': 'sets/couple1/cover.jpg',
-        'images': [f'sets/couple1/img{i}.jpg' for i in range(1, 7)]
-    },
+        'name': 'Riya & Simar',
+        'location': 'Sacramento, CA',
+        'cover_image': 'sets/riya_simar/cover.jpg',
+        'images': [f'sets/riya_simar/img{i}.jpg' for i in range(1, 20)]
+
+},
     {
         'id': 2,
         'name': 'Gurp & Anita',
-        'location': 'Santa Monica, CA',
-        'cover_image': 'sets/couple2/cover.jpg',
-        'images': [f'{i}.jpg' for i in range(1, 14)]
+        'location': 'Yosemite, CA',
+        'cover_image': 'sets/gurp_anita/cover.jpg',
+        'images': [f'sets/gurp_anita/img{i}.jpg' for i in range(1, 14)]
     },
     {
         'id': 3,
         'name': 'Jeff & Brit',
-        'location': 'San Francisco, CA',
-        'cover_image': 'sets/couple3/cover.jpg',
-        'images': [f'sets/couple3/img{i}.jpg' for i in range(1, 18)]
+        'location': 'California',
+        'cover_image': 'sets/jeff_brit/cover.jpg',
+        'has_subshoots': True,
+        'subshoots': [
+            {
+                'id': 1,
+                'name': 'Engagement Shoot 1',
+                'location': 'Los Angeles, CA',
+                'cover_image': 'sets/jeff_brit/set1/cover.jpg',
+                'images': [f'sets/jeff_brit/set1/img{i}.jpg' for i in range(1, 15)]
+            },
+            {
+                'id': 2,
+                'name': 'Engagement Shoot 2',
+                'location': 'Half Moon Bay, CA',
+                'cover_image': 'sets/jeff_brit/set2/cover.jpg',
+                'images': [f'sets/jeff_brit/set2/img{i}.jpg' for i in range(1, 25)]
+            }
+        ]
+    },
+    {
+        'id': 4,
+        'name': 'Max & Hailie',
+        'location': 'Utah',
+        'cover_image': 'sets/max_hailie/cover.jpg',
+        'has_subshoots': True,
+        'subshoots': [
+            {
+                'id': 1,
+                'name': 'Engagement Shoot 1',
+                'location': 'Utah',
+                'cover_image': 'sets/max_hailie/set2/cover.jpg',
+                'images': [f'sets/max_hailie/set2/img{i}.jpg' for i in range(1, 22)]
+            },
+            {
+                'id': 2,
+                'name': 'Engagement Shoot 2',
+                'location': 'Utah',
+                'cover_image': 'sets/max_hailie/set1/cover.jpg',
+                'images': [f'sets/max_hailie/set1/img{i}.jpg' for i in range(1, 24)]
+            },
+            {
+                'id': 3,
+                'name': 'Engagement Shoot 3',
+                'location': 'Utah',
+                'cover_image': 'sets/max_hailie/set3/cover.jpg',
+                'images': [f'sets/max_hailie/set3/img{i}.jpg' for i in range(1, 20)]
+            }
+        ]
     }
 ]
+
 
 
 @app.route('/')
@@ -56,7 +106,25 @@ def gallery_set(set_id):
     gallery_set = next((s for s in GALLERY_SETS if s['id'] == set_id), None)
     if gallery_set is None:
         return "Gallery set not found", 404
-    return render_template('gallery_set.html', gallery_set=gallery_set)
+
+    # Check if this gallery has subshoots
+    if gallery_set.get('has_subshoots'):
+        return render_template('gallery_subshoots.html', gallery_set=gallery_set)
+    else:
+        return render_template('gallery_set.html', gallery_set=gallery_set)
+
+
+@app.route('/gallery/<int:set_id>/<int:subshoot_id>')
+def gallery_subshoot(set_id, subshoot_id):
+    gallery_set = next((s for s in GALLERY_SETS if s['id'] == set_id), None)
+    if gallery_set is None:
+        return "Gallery set not found", 404
+
+    subshoot = next((s for s in gallery_set.get('subshoots', []) if s['id'] == subshoot_id), None)
+    if subshoot is None:
+        return "Subshoot not found", 404
+
+    return render_template('gallery_set.html', gallery_set=subshoot, parent_name=gallery_set['name'])
 
 
 @app.route('/about')
@@ -77,7 +145,8 @@ def send_email():
         # Create email message
         msg = Message(
             subject=f"New Wedding Inquiry from {data.get('name', 'Unknown')}",
-            recipients=[os.environ.get('EMAIL_USER')]  # Or hardcode your email here
+            recipients=[os.environ.get('MAIL_RECIPIENT')],  # Where emails go
+            sender=os.environ.get('MAIL_DEFAULT_SENDER')
         )
 
         # Format the email body - using .get() with defaults to avoid KeyErrors
