@@ -116,7 +116,8 @@ nav.scrolled {
     display: none;
     flex-direction: column;
     cursor: pointer;
-    gap: 5px;
+    gap: 6px;  /* Back to gap, but 6px for even spacing */
+    padding: 5px;  /* Add padding so it's easier to tap */
 }
 
 .hamburger span {
@@ -124,6 +125,7 @@ nav.scrolled {
     height: 2px;
     background-color: var(--dark-text);
     transition: all 0.3s ease;
+    display: block;  /* ADD THIS */
 }
 
 .hero {
@@ -382,6 +384,7 @@ nav.scrolled {
 .about-text h2 {
     font-size: 2rem;
     font-weight: 600;
+
     margin-bottom: 1.5rem;
     letter-spacing: 1px;
 }
@@ -714,6 +717,9 @@ footer {
 }
 
 @media (max-width: 768px) {
+    .gallery-overlay {
+        transform: translateY(0);  /* Always show names/locations */
+    }
     .nav-links {
         position: fixed;
         top: 0;
@@ -731,6 +737,28 @@ footer {
         height: 35px;
         max-width: 150px;
         margin-left: 0;
+    }
+
+    .about-content {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .about-image {
+        height: 300px;
+        order: 2;
+        margin-top: 4rem;
+        margin-bottom: 4rem;
+        position: relative;
+        clear: both;
+    }
+
+    .about-text {
+        order: 1;
+        margin-bottom: 0rem;
+        position: relative;
     }
 
     .set-gallery-masonry {
@@ -856,15 +884,6 @@ footer {
 
     .form-row {
         grid-template-columns: 1fr;
-    }
-
-    .about-content {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-
-    .about-image {
-        height: 300px;
     }
 }
 

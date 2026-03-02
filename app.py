@@ -85,6 +85,13 @@ GALLERY_SETS = [
                 'images': [f'sets/max_hailie/set3/img{i}.jpg' for i in range(1, 20)]
             }
         ]
+    },
+    {
+        'id': 5,
+        'name': 'Felicia & Dillon',
+        'location': 'California',
+        'cover_image': 'sets/felicia_dillion/cover.jpg',
+        'images': [f'sets/felicia_dillion/img{i}.jpg' for i in range(1, 25)]
     }
 ]
 
