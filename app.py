@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify
 from flask_mail import Mail, Message
 import os
 from dotenv import load_dotenv
+import requests
 
 load_dotenv()
 
@@ -144,23 +145,22 @@ def contact():
     return render_template('contact.html')
 
 
+
 @app.route('/send_email', methods=['POST'])
 def send_email():
     try:
         data = request.get_json()
 
-        # Create email message
-        msg = Message(
-            subject=f"New Wedding Inquiry from {data.get('name', 'Unknown')}",
-            recipients=[os.environ.get('MAIL_RECIPIENT')],  # Where emails go
-            sender=os.environ.get('MAIL_DEFAULT_SENDER')
-        )
-
-        # Format the email body - using .get() with defaults to avoid KeyErrors
-        msg.body = f"""
+        # Use Mailgun API instead of SMTP
+        response = requests.post(
+            f"https://api.mailgun.net/v3/{os.environ.get('MAILGUN_DOMAIN')}/messages",
+            auth=("api", os.environ.get('MAILGUN_API_KEY')),
+            data={
+                "from": f"Amor Frames <{os.environ.get('MAIL_DEFAULT_SENDER')}>",
+                "to": [os.environ.get('MAIL_RECIPIENT')],
+                "subject": f"New Wedding Inquiry from {data.get('name', 'Unknown')}",
+                "text": f"""
 NEW CONTACT FORM SUBMISSION - AMOR FRAMES
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 CLIENT INFORMATION:
 Name: {data.get('name', 'N/A')}
@@ -173,28 +173,27 @@ Role: {data.get('role', 'N/A')}
 Date Needed: {data.get('date', 'N/A')}
 Event Type: {data.get('eventType', 'N/A')}
 
-WEDDING VISION & REQUIREMENTS:
+WEDDING VISION:
 {data.get('weddingInfo', 'N/A')}
 
 HOW THEY FOUND US:
 {data.get('howFound', 'N/A')}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 Reply to: {data.get('email', 'N/A')}
 Phone: {data.get('phone', 'N/A')}
+                """
+            },
+            timeout=30
+        )
 
-This message was sent from the Amor Frames contact form.
-        """
-
-        mail.send(msg)
-        return jsonify({'success': True, 'message': 'Email sent successfully!'})
+        if response.status_code == 200:
+            return jsonify({'success': True, 'message': 'Email sent successfully!'})
+        else:
+            raise Exception(f"Mailgun API error: {response.text}")
 
     except Exception as e:
         print(f"Error sending email: {str(e)}")
-        import traceback
-        traceback.print_exc()  # This will show full error details
-        return jsonify({'success': False, 'message': f'Failed to send email: {str(e)}'}), 500
+        return jsonify({'success': False, 'message': 'Failed to send email'}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
