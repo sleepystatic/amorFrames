@@ -13,8 +13,9 @@
 
     <div class="set-gallery-masonry">
         {% for image in gallery_set.images %}
-        <!-- Placeholder for individual images -->
-        <img src="{{ url_for('static', filename=image) }}" alt="{{ gallery_set.name }}">
+        <img src="{{ url_for('static', filename=image|web) }}"
+             alt="{{ gallery_set.name }}"
+             loading="lazy" decoding="async">
         {% endfor %}
     </div>
 </section>

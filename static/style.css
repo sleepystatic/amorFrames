@@ -18,7 +18,7 @@ body {
     font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
     color: var(--dark-text);
     background-color: var(--primary-cream);
-    background-image: url('../static/images/noise2.png');
+    background-image: url('web/images/noise2.png');
     background-repeat: repeat;
     background-size: 300px 300px;
     line-height: 1.6;

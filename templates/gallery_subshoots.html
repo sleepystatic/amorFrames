@@ -15,7 +15,8 @@
     <div class="gallery-grid">
         {% for subshoot in gallery_set.subshoots %}
         <div class="gallery-item" onclick="window.location.href='{{ url_for('gallery_subshoot', set_id=gallery_set.id, subshoot_id=subshoot.id) }}'">
-            <img src="{{ url_for('static', filename=subshoot.cover_image) }}" alt="{{ subshoot.name }}">
+            <img src="{{ url_for('static', filename=subshoot.cover_image|thumb) }}"
+                 alt="{{ subshoot.name }}" loading="lazy" decoding="async">
             <div class="gallery-overlay">
                 <h3>{{ subshoot.name }}</h3>
                 <p>{{ subshoot.location }}</p>

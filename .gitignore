@@ -5,3 +5,9 @@ __pycache__/
 .idea/
 
 photos/
+
+# Full-resolution originals. Never served to browsers, never committed --
+# they are what blew the Render bandwidth limit. Keep your own backup and
+# regenerate the served derivatives with: python scripts/optimize_images.py
+static/sets/
+static/images/

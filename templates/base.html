@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Amor Frames - Wedding Photography{% endblock %}</title>
 
-    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicons/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='web/images/favicons/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='web/images/favicons/favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='web/images/favicons/apple-touch-icon.png') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,7 +19,7 @@
     <nav>
         <div class="nav-container">
             <a href="{{ url_for('home') }}" class="logo">
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Amor Frames" class="logo-image">
+                <img src="{{ url_for('static', filename='web/images/logo.png') }}" alt="Amor Frames" class="logo-image">
             </a>
             <ul class="nav-links">
                 <li><a href="{{ url_for('home') }}">Home</a></li>
@@ -39,21 +40,23 @@
 
         <footer>
             <!-- Floating Images -->
-            <img src="{{ url_for('static', filename='images/footer1.jpg') }}"
+            <img src="{{ url_for('static', filename='web/images/footer1.jpg') }}"
                  class="footer-floating-image large"
                  style="bottom: 60px; left: 100px;"
-                 alt="Portfolio">
+                 alt="Portfolio"
+                 loading="lazy" decoding="async">
 
-            <img src="{{ url_for('static', filename='images/footer2.jpg') }}"
+            <img src="{{ url_for('static', filename='web/images/footer2.jpg') }}"
                  class="footer-floating-image medium"
                  style="bottom: 80px; right: 60px;"
-                 alt="Portfolio">
+                 alt="Portfolio"
+                 loading="lazy" decoding="async">
 
             <!-- Footer Content -->
             <div class="footer-content">
                 <div class="footer-content">
                 <a href="{{ url_for('home') }}" class="logo">
-                    <img src="{{ url_for('static', filename='images/footer-logo.png') }}" alt="Amor Frames" class="footer-logo">
+                    <img src="{{ url_for('static', filename='web/images/footer-logo.png') }}" alt="Amor Frames" class="footer-logo" loading="lazy">
                 </a>
                 <p class="footer-tagline">Editorial Wedding Photography Based in California</p>
                 <p class="footer-tagline-2">Timeless Photos</p>

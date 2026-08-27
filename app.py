@@ -18,6 +18,21 @@ app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER')
 mail = Mail(app)
 
 
+# GALLERY_SETS paths point at the full-resolution originals in static/sets/.
+# These filters swap in the web-sized derivatives so browsers never download
+# a 20 MB original. Regenerate them with scripts/optimize_images.py.
+@app.template_filter('web')
+def web_image(path):
+    """sets/foo/img1.jpg -> web/foo/img1.jpg (2400px, for full viewing)"""
+    return path.replace('sets/', 'web/', 1)
+
+
+@app.template_filter('thumb')
+def thumb_image(path):
+    """sets/foo/cover.jpg -> thumbs/foo/cover.jpg (800px, for grids)"""
+    return path.replace('sets/', 'thumbs/', 1)
+
+
 GALLERY_SETS = [
     {
         'id': 1,
@@ -53,7 +68,7 @@ GALLERY_SETS = [
                 'name': 'Engagement Shoot 2',
                 'location': 'Half Moon Bay, CA',
                 'cover_image': 'sets/jeff_brit/set2/cover.jpg',
-                'images': [f'sets/jeff_brit/set2/img{i}.jpg' for i in range(1, 25)]
+                'images': [f'sets/jeff_brit/set2/img{i}.jpg' for i in range(1, 19)]
             }
         ]
     },
@@ -76,7 +91,7 @@ GALLERY_SETS = [
                 'name': 'Engagement Shoot 2',
                 'location': 'Utah',
                 'cover_image': 'sets/max_hailie/set1/cover.jpg',
-                'images': [f'sets/max_hailie/set1/img{i}.jpg' for i in range(1, 24)]
+                'images': [f'sets/max_hailie/set1/img{i}.jpg' for i in range(1, 22)]
             },
             {
                 'id': 3,
