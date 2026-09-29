@@ -70,34 +70,47 @@ If the Mailgun account is in the EU region, change `api.mailgun.net` to
 
 ## Deploy
 
-From the project root, so Wrangler picks up `functions/`:
+**Pushing to GitHub does not deploy.** The Pages project is in direct-upload
+mode, so Cloudflare never reads the repo — GitHub is backup and history only.
+This is what makes a change live:
+
+```bash
+python scripts/deploy.py
+```
+
+That builds, verifies, and publishes. Wrangler only uploads changed files, so
+deploys after the first are quick.
+
+| Command | Use it for |
+|---|---|
+| `python scripts/deploy.py` | Text, layout, CSS, template or function changes |
+| `python scripts/deploy.py --photos` | After adding or replacing photos |
+| `python scripts/deploy.py --dry-run` | Build and verify without publishing |
+
+The underlying two steps, if you'd rather run them yourself — from the project
+root, so Wrangler picks up `functions/`:
 
 ```bash
 python freeze.py
 npx wrangler pages deploy build --project-name amorframes --branch main
 ```
-
-Wrangler only uploads changed files, so deploys after the first are quick.
 
 ## Updating the site
 
-**Text or layout** — edit the template, then rebuild and deploy.
+**Text or layout** — edit the template, then `python scripts/deploy.py`.
 
 **Adding photos** — drop the originals into `originals/sets/<set>/`, add them to
-`GALLERY_SETS` in `app.py`, then:
-
-```bash
-python scripts/optimize_images.py
-python freeze.py
-npx wrangler pages deploy build --project-name amorframes --branch main
-```
+`GALLERY_SETS` in `app.py`, then `python scripts/deploy.py --photos`.
 
 `freeze.py` fails loudly if a page references an asset that isn't in the build,
-so a mismatch between `GALLERY_SETS` and the files on disk gets caught before
-it ships.
+so a mismatch between `GALLERY_SETS` and the files on disk is caught before it
+ships rather than after.
 
 **Previewing locally** — `python app.py` runs the normal Flask dev server at
 `http://localhost:5000`, including the `/send_email` route.
+
+**Committing** — commit and push as normal for history and backup. It has no
+effect on what's live; only a deploy does that.
 
 ## Connecting the domain
 
