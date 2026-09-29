@@ -37,23 +37,33 @@ Create the project:
 npx wrangler pages project create amorframes --production-branch main
 ```
 
-Add the four secrets. Each prompts for the value:
+Add the four secrets. `.dev.vars` (gitignored) holds them as `KEY=VALUE`, and
+Wrangler uploads the whole file in one go — no typing into masked prompts:
 
 ```bash
-npx wrangler pages secret put MAILGUN_API_KEY --project-name amorframes
-npx wrangler pages secret put MAILGUN_DOMAIN --project-name amorframes
-npx wrangler pages secret put MAIL_DEFAULT_SENDER --project-name amorframes
-npx wrangler pages secret put MAIL_RECIPIENT --project-name amorframes
+npx wrangler pages secret bulk .dev.vars --project-name amorframes
 ```
 
-Values:
+The keys are `MAILGUN_API_KEY`, `MAILGUN_DOMAIN`, `MAIL_DEFAULT_SENDER` and
+`MAIL_RECIPIENT`, mirroring `.env`. `MAILGUN_API_KEY` is Mailgun's **Private API
+key**, not the SMTP password — it's the value the Flask app passes as
+`auth=("api", ...)`.
 
-- `MAILGUN_API_KEY` — the **Private API key** from Mailgun → API Keys. Not the SMTP password.
-- `MAILGUN_DOMAIN` — `amorframesbyluv.com`
-- `MAIL_DEFAULT_SENDER` — `amorframes@amorframesbyluv.com`
-- `MAIL_RECIPIENT` — `amorframesbyluv@gmail.com`
+If `.dev.vars` is ever lost, regenerate it from `.env`:
 
-Secrets only apply to deployments made *after* they exist, so set them before deploying.
+```bash
+python scripts/sync_secrets.py
+```
+
+To set a single secret interactively instead, pipe it in rather than fighting
+the masked prompt:
+
+```bash
+echo "the-value" | npx wrangler pages secret put MAILGUN_API_KEY --project-name amorframes
+```
+
+Secrets only apply to deployments made *after* they exist, so set them before
+deploying. Confirm with `npx wrangler pages secret list --project-name amorframes`.
 
 If the Mailgun account is in the EU region, change `api.mailgun.net` to
 `api.eu.mailgun.net` in `functions/send_email.js`.
