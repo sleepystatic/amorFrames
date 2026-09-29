@@ -103,8 +103,19 @@ it ships.
    and `www.amorframesbyluv.com`. SSL is automatic.
 5. Verify the live site, then delete the Render service.
 
-## After cutover
+## Local development
 
-`Procfile`, `Dockerfile`, and `.dockerignore` are leftovers from server-based
-hosting and do nothing on Pages. Once the domain is live and stable they can be
-deleted, along with `gunicorn` from `requirements.txt`.
+`python app.py` runs the Flask dev server at `http://localhost:5000` with live
+template reloading. Its `/send_email` route is a local stand-in for the Pages
+Function, so the contact form works while you're developing.
+
+To exercise the real Pages Function instead, build first and let Wrangler serve
+it:
+
+```bash
+python freeze.py
+npx wrangler pages dev build
+```
+
+Secrets for local function runs go in `.dev.vars` (gitignored), same keys as
+the deployed secrets.

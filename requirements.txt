@@ -6,7 +6,3 @@ Frozen-Flask==1.0.2
 Pillow==12.3.0
 python-dotenv==1.0.0
 requests==2.31.0
-
-# Only needed by the Procfile/Dockerfile server fallback, which becomes
-# obsolete once the domain is cut over to Cloudflare Pages.
-gunicorn==21.2.0
