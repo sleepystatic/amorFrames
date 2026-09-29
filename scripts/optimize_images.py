@@ -1,12 +1,12 @@
 """Generate web-sized image derivatives from the full-resolution originals.
 
-The originals (static/sets/, static/images/) are NOT served to browsers and are
-not tracked in git -- keep your own backup of them. This script builds the
-derivatives that Flask actually serves:
+The originals live in originals/ -- outside static/, so the static build never
+sweeps 2.5 GB of camera files into build/ -- and are not tracked in git. Keep
+your own backup of them. This script builds the derivatives Flask serves:
 
-    static/sets/<set>/img.jpg    ->  static/web/<set>/img.jpg      2400px  display
+    originals/sets/<set>/img.jpg ->  static/web/<set>/img.jpg      2400px  display
                                  ->  static/thumbs/<set>/img.jpg    800px  grids
-    static/images/<name>         ->  static/web/images/<name>       per CSS box
+    originals/images/<name>      ->  static/web/images/<name>       per CSS box
 
 Run from the project root after adding or replacing any photo:
 
@@ -20,10 +20,10 @@ import sys
 
 from PIL import Image, ImageOps
 
-SETS_SRC = os.path.join('static', 'sets')
+SETS_SRC = os.path.join('originals', 'sets')
 WEB_DST = os.path.join('static', 'web')
 THUMB_DST = os.path.join('static', 'thumbs')
-IMAGES_SRC = os.path.join('static', 'images')
+IMAGES_SRC = os.path.join('originals', 'images')
 IMAGES_DST = os.path.join('static', 'web', 'images')
 
 WEB_EDGE, WEB_Q = 2400, 82
@@ -115,8 +115,8 @@ def build_chrome():
 
 def main():
     if not os.path.isdir(SETS_SRC) or not os.path.isdir(IMAGES_SRC):
-        sys.exit("Originals not found. Restore static/sets/ and static/images/ "
-                 "from your backup before running this.")
+        sys.exit("Originals not found. Restore originals/sets/ and "
+                 "originals/images/ from your backup before running this.")
     print("Gallery sets ->")
     g_in, g_out = build_gallery()
     print("Site chrome ->")

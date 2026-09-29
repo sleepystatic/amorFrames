@@ -1,0 +1,26 @@
+# Cloudflare Pages response headers. Copied to the build root by freeze.py.
+# https://developers.cloudflare.com/pages/configuration/headers/
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+
+# Font filename never changes and neither does its content.
+/static/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Photos are addressed by a stable path, so cache hard but not forever --
+# replacing a photo under the same filename goes live within a week, or
+# immediately if you purge the cache in the Cloudflare dashboard.
+/static/web/*
+  Cache-Control: public, max-age=604800
+/static/thumbs/*
+  Cache-Control: public, max-age=604800
+
+# Edited more often than the photos, so keep these short.
+/static/style.css
+  Cache-Control: public, max-age=3600
+/static/script.js
+  Cache-Control: public, max-age=3600

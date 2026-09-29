@@ -7,7 +7,14 @@ __pycache__/
 photos/
 
 # Full-resolution originals. Never served to browsers, never committed --
-# they are what blew the Render bandwidth limit. Keep your own backup and
+# they are what blew the Render bandwidth limit. They live outside static/
+# so the static build can't sweep 2.5 GB into build/. Keep your own backup;
 # regenerate the served derivatives with: python scripts/optimize_images.py
-static/sets/
-static/images/
+originals/
+
+# Static build output -- regenerate with: python freeze.py
+build/
+
+# Wrangler / Cloudflare local state
+.wrangler/
+.dev.vars

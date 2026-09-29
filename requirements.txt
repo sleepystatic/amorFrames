@@ -1,5 +1,12 @@
+# The site is a static build deployed to Cloudflare Pages -- these are the
+# build-time dependencies, not a server runtime. Flask renders the pages,
+# Frozen-Flask writes them to build/, Pillow resizes the photos.
 Flask==3.0.0
-Flask-Mail==0.9.1
+Frozen-Flask==1.0.2
+Pillow==12.3.0
 python-dotenv==1.0.0
-gunicorn==21.2.0
 requests==2.31.0
+
+# Only needed by the Procfile/Dockerfile server fallback, which becomes
+# obsolete once the domain is cut over to Cloudflare Pages.
+gunicorn==21.2.0

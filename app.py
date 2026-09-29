@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, jsonify
-from flask_mail import Mail, Message
 import os
 from dotenv import load_dotenv
 import requests
@@ -8,14 +7,10 @@ load_dotenv()
 
 app = Flask(__name__)
 
-app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.mailgun.org')
-app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 587))
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
-app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
-app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER')
-
-mail = Mail(app)
+# Mail goes out over the Mailgun HTTP API (see send_email below), not SMTP,
+# so no mail extension or SMTP credentials are needed here. In production the
+# form is served by the Cloudflare Pages Function in functions/send_email.js;
+# this route only runs when you're developing locally with `python app.py`.
 
 
 # GALLERY_SETS paths point at the full-resolution originals in static/sets/.
@@ -119,12 +114,12 @@ def home():
     return render_template('home.html', featured_sets=featured_sets)
 
 
-@app.route('/gallery')
+@app.route('/gallery/')
 def gallery():
     return render_template('gallery.html', gallery_sets=GALLERY_SETS)
 
 
-@app.route('/gallery/<int:set_id>')
+@app.route('/gallery/<int:set_id>/')
 def gallery_set(set_id):
     gallery_set = next((s for s in GALLERY_SETS if s['id'] == set_id), None)
     if gallery_set is None:
@@ -137,7 +132,7 @@ def gallery_set(set_id):
         return render_template('gallery_set.html', gallery_set=gallery_set)
 
 
-@app.route('/gallery/<int:set_id>/<int:subshoot_id>')
+@app.route('/gallery/<int:set_id>/<int:subshoot_id>/')
 def gallery_subshoot(set_id, subshoot_id):
     gallery_set = next((s for s in GALLERY_SETS if s['id'] == set_id), None)
     if gallery_set is None:
@@ -150,12 +145,12 @@ def gallery_subshoot(set_id, subshoot_id):
     return render_template('gallery_set.html', gallery_set=subshoot, parent_name=gallery_set['name'])
 
 
-@app.route('/about')
+@app.route('/about/')
 def about():
     return render_template('about.html')
 
 
-@app.route('/contact')
+@app.route('/contact/')
 def contact():
     return render_template('contact.html')
 
