@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "_macros.html" import cover_image %}
 
 {% block title %}{{ gallery_set.name }} - Amor Frames{% endblock %}
 
@@ -15,8 +16,7 @@
     <div class="gallery-grid">
         {% for subshoot in gallery_set.subshoots %}
         <div class="gallery-item" onclick="window.location.href='{{ url_for('gallery_subshoot', set_id=gallery_set.id, subshoot_id=subshoot.id) }}'">
-            <img src="{{ url_for('static', filename=subshoot.cover_image|thumb) }}"
-                 alt="{{ subshoot.name }}" loading="lazy" decoding="async">
+            {{ cover_image(subshoot.cover_image, subshoot.name) }}
             <div class="gallery-overlay">
                 <h3>{{ subshoot.name }}</h3>
                 <p>{{ subshoot.location }}</p>

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "_macros.html" import gallery_photo %}
 
 {% block title %}{{ gallery_set.name }} - Amor Frames{% endblock %}
 
@@ -13,9 +14,7 @@
 
     <div class="set-gallery-masonry">
         {% for image in gallery_set.images %}
-        <img src="{{ url_for('static', filename=image|web) }}"
-             alt="{{ gallery_set.name }}"
-             loading="lazy" decoding="async">
+        {{ gallery_photo(image, gallery_set.name) }}
         {% endfor %}
     </div>
 </section>

@@ -1,10 +1,13 @@
 {% extends "base.html" %}
+{% from "_macros.html" import hero_preload, hero_image, cover_image %}
 
 {% block title %}Gallery - Amor Frames{% endblock %}
 
+{% block preload %}{{ hero_preload('hero-background-pf') }}{% endblock %}
+
 {% block content %}
 <section class="hero hero-gallery">
-    <div class="hero-bg" style="background-image: url('{{ url_for('static', filename='web/images/hero-background-pf.jpg') }}');"></div>
+    {{ hero_image('hero-background-pf') }}
     <div class="hero-overlay"></div>
 </section>
 
@@ -19,8 +22,7 @@
     <div class="gallery-grid">
         {% for set in gallery_sets %}
         <div class="gallery-item" onclick="window.location.href='{{ url_for('gallery_set', set_id=set.id) }}'">
-            <img src="{{ url_for('static', filename=set.cover_image|thumb) }}"
-                 alt="{{ set.name }}" loading="lazy" decoding="async">
+            {{ cover_image(set.cover_image, set.name) }}
             <div class="gallery-overlay">
                 <h3>{{ set.name }}</h3>
                 <p>{{ set.location }}</p>

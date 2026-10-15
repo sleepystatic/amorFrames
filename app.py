@@ -1,4 +1,7 @@
 from flask import Flask, render_template, request, jsonify
+from markupsafe import Markup
+from PIL import Image
+import functools
 import os
 from dotenv import load_dotenv
 import requests
@@ -22,10 +25,35 @@ def web_image(path):
     return path.replace('sets/', 'web/', 1)
 
 
+@app.template_filter('mid')
+def mid_image(path):
+    """sets/foo/img1.jpg -> mid/foo/img1.jpg (1200px, phone masonry)"""
+    return path.replace('sets/', 'mid/', 1)
+
+
 @app.template_filter('thumb')
 def thumb_image(path):
     """sets/foo/cover.jpg -> thumbs/foo/cover.jpg (800px, for grids)"""
     return path.replace('sets/', 'thumbs/', 1)
+
+
+@functools.lru_cache(maxsize=None)
+def _size_of(rel_path):
+    """(width, height) of a file under static/, or None if it can't be read."""
+    try:
+        with Image.open(os.path.join(app.static_folder, rel_path)) as im:
+            return im.size
+    except Exception:
+        return None
+
+
+@app.template_global()
+def dims(rel_path):
+    """Emit width/height so the browser reserves the right box before the
+    image arrives. Without these every image reflows the page as it loads,
+    which is most of the layout-shift score."""
+    size = _size_of(rel_path)
+    return Markup(f'width="{size[0]}" height="{size[1]}"') if size else Markup('')
 
 
 GALLERY_SETS = [

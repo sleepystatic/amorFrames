@@ -16,6 +16,8 @@
 # immediately if you purge the cache in the Cloudflare dashboard.
 /static/web/*
   Cache-Control: public, max-age=604800
+/static/mid/*
+  Cache-Control: public, max-age=604800
 /static/thumbs/*
   Cache-Control: public, max-age=604800
 

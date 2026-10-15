@@ -1,0 +1,66 @@
+{#
+  Full-bleed hero background.
+
+  It used to be a CSS background-image on a div, which meant every phone
+  downloaded the 2560px file (422 KB) as its LCP element. As a real <img> it
+  can carry srcset, so a 375px screen takes the 800px variant (~60 KB), and it
+  can be preloaded and prioritised. `dims` supplies the intrinsic size so the
+  aspect ratio is known before the bytes arrive.
+
+  `stem` is the filename without the width suffix, e.g. 'hero-background'.
+#}
+
+{% macro hero_srcset(stem) -%}
+{{ url_for('static', filename='web/images/' ~ stem ~ '-800.jpg') }} 800w, {{ url_for('static', filename='web/images/' ~ stem ~ '-1400.jpg') }} 1400w, {{ url_for('static', filename='web/images/' ~ stem ~ '-2560.jpg') }} 2560w
+{%- endmacro %}
+
+{% macro hero_preload(stem) -%}
+<link rel="preload" as="image" fetchpriority="high"
+      imagesrcset="{{ hero_srcset(stem) }}"
+      imagesizes="100vw">
+{%- endmacro %}
+
+{% macro hero_image(stem) -%}
+<img class="hero-bg" alt="" fetchpriority="high" decoding="async"
+     src="{{ url_for('static', filename='web/images/' ~ stem ~ '-1400.jpg') }}"
+     srcset="{{ hero_srcset(stem) }}"
+     sizes="100vw"
+     {{ dims('web/images/' ~ stem ~ '-2560.jpg') }}>
+{%- endmacro %}
+
+
+{#
+  A gallery photo inside the masonry grid, which is 1 column below 480px,
+  2 columns to 768px and 3 above. The container pads 2rem either side, so
+  `sizes` subtracts 4rem in the single-column case -- a photo really is about
+  311 CSS px wide on a 375px phone, not half the viewport.
+
+  Getting `sizes` right matters more than it looks: claim too little and the
+  browser picks a candidate too small and the photo looks soft; claim too much
+  and it pulls the 2400px file onto a phone.
+
+  `src` deliberately stays the full-size file: script.js builds the lightbox
+  from img.src, which reads the attribute rather than the chosen candidate, so
+  clicking a photo still opens full resolution.
+#}
+{% macro gallery_photo(path, alt) -%}
+<img src="{{ url_for('static', filename=path|web) }}"
+     srcset="{{ url_for('static', filename=path|thumb) }} 800w, {{ url_for('static', filename=path|mid) }} 1200w, {{ url_for('static', filename=path|web) }} 2400w"
+     sizes="(max-width: 480px) calc(100vw - 4rem), (max-width: 768px) 50vw, 33vw"
+     alt="{{ alt }}"
+     {{ dims(path|web) }}
+     loading="lazy" decoding="async">
+{%- endmacro %}
+
+
+{#
+  A cover image in the card grids on the home, gallery and sub-shoot pages.
+  These are already served from static/thumbs; this only adds the intrinsic
+  size so the cards do not reflow as they load.
+#}
+{% macro cover_image(path, alt) -%}
+<img src="{{ url_for('static', filename=path|thumb) }}"
+     alt="{{ alt }}"
+     {{ dims(path|thumb) }}
+     loading="lazy" decoding="async">
+{%- endmacro %}

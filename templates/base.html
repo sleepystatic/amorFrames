@@ -9,9 +9,21 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='web/images/favicons/favicon-16x16.png') }}">
     <link rel="apple-touch-icon" href="{{ url_for('static', filename='web/images/favicons/apple-touch-icon.png') }}">
 
+    {# Pages with a full-bleed hero preload it here: it is the LCP element,
+       and the preload scanner finds it before the stylesheets resolve. #}
+    {% block preload %}{% endblock %}
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;600&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+
+    {# Only 300 and 400 are used anywhere in the CSS or templates -- 600 was
+       being fetched and never drawn. Loaded without blocking render: the
+       stylesheet starts as media="print", then switches to all once it has
+       arrived. display=swap paints text in the fallback face meanwhile. #}
+    {% set google_fonts = 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400&family=Montserrat:wght@300;400&display=swap' %}
+    <link rel="preload" as="style" href="{{ google_fonts }}">
+    <link rel="stylesheet" href="{{ google_fonts }}" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="{{ google_fonts }}"></noscript>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -19,7 +31,8 @@
     <nav>
         <div class="nav-container">
             <a href="{{ url_for('home') }}" class="logo">
-                <img src="{{ url_for('static', filename='web/images/logo.png') }}" alt="Amor Frames" class="logo-image">
+                <img src="{{ url_for('static', filename='web/images/logo.png') }}" alt="Amor Frames" class="logo-image"
+                     {{ dims('web/images/logo.png') }} fetchpriority="high">
             </a>
             <ul class="nav-links">
                 <li><a href="{{ url_for('home') }}">Home</a></li>
@@ -44,19 +57,22 @@
                  class="footer-floating-image large"
                  style="bottom: 60px; left: 100px;"
                  alt="Portfolio"
+                 {{ dims('web/images/footer1.jpg') }}
                  loading="lazy" decoding="async">
 
             <img src="{{ url_for('static', filename='web/images/footer2.jpg') }}"
                  class="footer-floating-image medium"
                  style="bottom: 80px; right: 60px;"
                  alt="Portfolio"
+                 {{ dims('web/images/footer2.jpg') }}
                  loading="lazy" decoding="async">
 
             <!-- Footer Content -->
             <div class="footer-content">
                 <div class="footer-content">
                 <a href="{{ url_for('home') }}" class="logo">
-                    <img src="{{ url_for('static', filename='web/images/footer-logo.png') }}" alt="Amor Frames" class="footer-logo" loading="lazy">
+                    <img src="{{ url_for('static', filename='web/images/footer-logo.png') }}" alt="Amor Frames" class="footer-logo"
+                         {{ dims('web/images/footer-logo.png') }} loading="lazy">
                 </a>
                 <p class="footer-tagline">Editorial Wedding Photography Based in California</p>
                 <p class="footer-tagline-2">Timeless Photos</p>

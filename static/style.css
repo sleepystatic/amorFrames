@@ -20,7 +20,11 @@ body {
     background-color: var(--primary-cream);
     background-image: url('web/images/noise2.png');
     background-repeat: repeat;
-    background-size: 300px 300px;
+    /* Tile is 150px now, down from 500px: the grain lives entirely in the
+       alpha channel and will not compress, so the file shrank 89 KB -> 23 KB
+       by shrinking the tile rather than by quantising it. Drawn 1:1 so the
+       grain is unchanged. */
+    background-size: 150px 150px;
     line-height: 1.6;
 }
 
@@ -144,9 +148,12 @@ nav.scrolled {
     left: 0;
     width: 100%;
     height: 120%;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    /* This is a real <img> now, not a background-image, so it can be
+       preloaded and carry srcset -- a phone takes the 800px variant instead
+       of the 2560px one. object-fit reproduces background-size: cover.
+       See templates/_macros.html. */
+    object-fit: cover;
+    object-position: center;
     z-index: 0;
 }
 

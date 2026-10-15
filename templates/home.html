@@ -1,13 +1,16 @@
 
 {% extends "base.html" %}
+{% from "_macros.html" import hero_preload, hero_image, cover_image %}
 
-{% block title %}Gallery - Amor Frames{% endblock %}
+{% block title %}Amor Frames - Wedding Photography{% endblock %}
+
+{% block preload %}{{ hero_preload('hero-background') }}{% endblock %}
 
 {% block content %}
 
 <!-- Hero Section -->
 <section class="hero">
-    <div class="hero-bg" style="background-image: url('{{ url_for('static', filename='web/images/hero-background.jpg') }}');"></div>
+    {{ hero_image('hero-background') }}
     <div class="hero-overlay"></div>
 
 </section>
@@ -25,12 +28,14 @@
          class="scattered-image medium"
          style="top: 1050px; right: 20px;"
          alt="Wedding Photo"
+         {{ dims('web/images/scattered1.jpg') }}
          loading="lazy" decoding="async">
 
     <img src="{{ url_for('static', filename='web/images/scattered2.jpg') }}"
          class="scattered-image large"
          style="top: 1200px; left: 20px;"
          alt="Wedding Photo"
+         {{ dims('web/images/scattered2.jpg') }}
          loading="lazy" decoding="async">
     <div style="text-align: center; max-width: 800px; margin: 0 auto;">
         <h2 style="font-size: 2.5rem; font-weight: 300; letter-spacing: 2px; margin-bottom: 1.5rem;">Welcome to Amor Frames</h2>
@@ -53,8 +58,7 @@
     <div class="gallery-grid">
         {% for set in featured_sets %}
         <div class="gallery-item" onclick="window.location.href='{{ url_for('gallery_set', set_id=set.id) }}'">
-            <img src="{{ url_for('static', filename=set.cover_image|thumb) }}"
-                 alt="{{ set.name }}" loading="lazy" decoding="async">
+            {{ cover_image(set.cover_image, set.name) }}
             <div class="gallery-overlay">
                 <h3>{{ set.name }}</h3>
                 <p>{{ set.location }}</p>
