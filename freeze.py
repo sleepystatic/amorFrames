@@ -23,13 +23,15 @@ from app import app, GALLERY_SETS
 BUILD = Path('build')
 # Files that belong at the site root but aren't Flask routes.
 ROOT_EXTRAS = Path('cloudflare')
+SITE = 'https://amorframesbyluv.com'
 
 app.config['FREEZER_DESTINATION'] = str(BUILD)
 # Warn instead of dying if a single asset is missing; verify_build() below
 # turns that back into a hard failure so nothing ships broken silently.
 app.config['FREEZER_IGNORE_404_NOT_FOUND'] = True
 # Don't let the freezer delete the root extras we copy in afterwards.
-app.config['FREEZER_DESTINATION_IGNORE'] = ['_headers', '_redirects']
+app.config['FREEZER_DESTINATION_IGNORE'] = ['_headers', '_redirects',
+                                            'robots.txt', 'sitemap.xml']
 
 freezer = Freezer(app)
 
@@ -57,6 +59,20 @@ def copy_root_extras():
             print(f"  + {src.name}")
 
 
+def write_sitemap():
+    """List every frozen page, so robots.txt has something to point at."""
+    urls = []
+    for page in sorted(BUILD.rglob('index.html')):
+        rel = page.relative_to(BUILD).parent.as_posix()
+        urls.append(SITE + ('/' if rel == '.' else f'/{rel}/'))
+    body = '\n'.join(f'  <url><loc>{u}</loc></url>' for u in urls)
+    (BUILD / 'sitemap.xml').write_text(
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        f'{body}\n</urlset>\n', encoding='utf-8')
+    print(f"  + sitemap.xml ({len(urls)} urls)")
+
+
 def verify_build():
     """Every asset referenced by a built page must exist in build/."""
     pages = sorted(BUILD.rglob('*.html'))
@@ -67,7 +83,10 @@ def verify_build():
         refs |= set(re.findall(r'(?:src|href|url\()[="\']*\s*(/static/[^"\')\s]+)',
                                html))
     for ref in sorted(refs):
-        if not (BUILD / ref.lstrip('/')).exists():
+        # Static URLs carry a ?v=<hash> cache-buster; the file on disk is at
+        # the bare path, which is also where Frozen-Flask writes it.
+        path = ref.split('?', 1)[0].split('#', 1)[0]
+        if not (BUILD / path.lstrip('/')).exists():
             missing.append(ref)
 
     strays = [p for p in BUILD.rglob('*')
@@ -93,6 +112,7 @@ def verify_build():
 if __name__ == '__main__':
     freezer.freeze()
     copy_root_extras()
+    write_sitemap()
     if not verify_build():
         sys.exit("\nBuild is not deployable -- fix the above before deploying.")
     print("\nSite generated in build/ -- ready to deploy.")

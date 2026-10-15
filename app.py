@@ -1,8 +1,10 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, url_for
 from markupsafe import Markup
 from PIL import Image
 import functools
+import hashlib
 import os
+import re
 from dotenv import load_dotenv
 import requests
 
@@ -54,6 +56,56 @@ def dims(rel_path):
     which is most of the layout-shift score."""
     size = _size_of(rel_path)
     return Markup(f'width="{size[0]}" height="{size[1]}"') if size else Markup('')
+
+
+@functools.lru_cache(maxsize=None)
+def _asset_version(filename):
+    """Short content hash of a file under static/."""
+    try:
+        with open(os.path.join(app.static_folder, filename), 'rb') as fh:
+            return hashlib.blake2b(fh.read(), digest_size=6).hexdigest()
+    except OSError:
+        return None
+
+
+@app.url_defaults
+def _version_static(endpoint, values):
+    """Append ?v=<content hash> to every static URL.
+
+    The assets are cached for a year at the edge, so without this a photo
+    replaced under the same filename keeps serving the old bytes until that
+    expires -- which is exactly what happened to logo.png and noise2.png.
+    Changing the content changes the hash, so the URL changes and the cache
+    is bypassed immediately. Frozen-Flask drops the query when it decides
+    where to write, so the file still lands at its plain path.
+    """
+    if endpoint == 'static' and 'filename' in values and 'v' not in values:
+        version = _asset_version(values['filename'])
+        if version:
+            values['v'] = version
+
+
+@app.template_global()
+@functools.lru_cache(maxsize=None)
+def inline_css(filename='style.css'):
+    """style.css, ready to drop into a <style> tag, with its url() targets
+    rewritten to versioned absolute paths.
+
+    Inlining it removes the only render-blocking request on the page, which
+    Lighthouse measured at 271 ms of delayed first paint on mobile. The
+    stylesheet is ~4 KB over the wire, so carrying it per-page costs less
+    than the round trip it saves.
+    """
+    with open(os.path.join(app.static_folder, filename), encoding='utf-8') as fh:
+        css = fh.read()
+
+    def _version_ref(match):
+        ref = match.group(1).strip('\'" ')
+        if ref.startswith(('http:', 'https:', 'data:', '//', '/')):
+            return match.group(0)
+        return f"url('{url_for('static', filename=ref)}')"
+
+    return Markup(re.sub(r'url\(([^)]+)\)', _version_ref, css))
 
 
 GALLERY_SETS = [

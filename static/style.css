@@ -4,6 +4,10 @@
     --dark-text: #2C2C2C;
     --light-text: #666666;
     --accent-gold: #C9A86A;
+    /* #C9A86A only reaches 2.25:1 on white, below the 4.5:1 minimum for body
+       text. This darker tone is the same hue at 5.1:1, for gold text sitting
+       on a light background. */
+    --accent-gold-text: #8B6914;
     --white: #FFFFFF;
     --hover-overlay: rgba(255, 255, 255, 0.15);
 }
